@@ -13,21 +13,21 @@ import android.widget.TextView;
 
 public class FlashcardFragment extends Fragment {
 
-    private static final String ARG_PRACTICE_LENGTH = "practice_length";
-    private static final String ARG_POSITION = "position";
+    private static final String ARG_ON_LAST_FLASHCARD = "on_last_flashcard";
+    private static final String ARG_QUESTION_TEXT = "question_text";
+    private static final String ARG_ANSWER_TEXT = "answer_text";
 
-    private int position;
-    private int practiceLength;
-
+    private TextView question;
     private TextView answer;
     private Button answerButton;
     private Button nextButton;
     private Button advanceButton;
 
-    public static FlashcardFragment newInstance(final int position, final int practiceLength) {
+    public static FlashcardFragment newInstance(final boolean onLastFlashcard, final String questionText, final String answerText) {
         final Bundle args = new Bundle();
-        args.putInt(ARG_PRACTICE_LENGTH, practiceLength);
-        args.putInt(ARG_POSITION, position);
+        args.putBoolean(ARG_ON_LAST_FLASHCARD, onLastFlashcard);
+        args.putString(ARG_QUESTION_TEXT, questionText);
+        args.putString(ARG_ANSWER_TEXT, answerText);
 
         final FlashcardFragment fragment = new FlashcardFragment();
         fragment.setArguments(args);
@@ -43,10 +43,12 @@ public class FlashcardFragment extends Fragment {
 
         final View v = inflater.inflate(R.layout.fragment_flashcard, container, false);
 
-        practiceLength = getArguments().getInt(ARG_PRACTICE_LENGTH);
-        position = getArguments().getInt(ARG_POSITION);
+        question = v.findViewById(R.id.question);
+        question.setText(getArguments().getString(ARG_QUESTION_TEXT));
 
         answer = v.findViewById(R.id.answer);
+        answer.setText(getArguments().getString(ARG_ANSWER_TEXT));
+
         answerButton = v.findViewById(R.id.answer_button);
         nextButton = v.findViewById(R.id.next_button);
         advanceButton = v.findViewById(R.id.advance_button);
@@ -57,12 +59,12 @@ public class FlashcardFragment extends Fragment {
                 answer.setTextColor(Color.WHITE);
                 answerButton.setVisibility(View.GONE);
 
-                if (position < practiceLength - 1) {
-                    advanceButton.setVisibility(View.GONE);
-                    nextButton.setVisibility(View.VISIBLE);
-                } else {
+                if (getArguments().getBoolean(ARG_ON_LAST_FLASHCARD)) {
                     advanceButton.setVisibility(View.VISIBLE);
                     nextButton.setVisibility(View.GONE);
+                } else {
+                    advanceButton.setVisibility(View.GONE);
+                    nextButton.setVisibility(View.VISIBLE);
                 }
             }
         });
