@@ -1,4 +1,4 @@
-package com.github.rstockbridge.flashcards;
+package com.github.rstockbridge.citizenship;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

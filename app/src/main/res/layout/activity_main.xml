@@ -9,7 +9,7 @@
         android:id="@+id/text_view_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Welcome to the Flashcards app!"
+        android:text="Welcome to the Citizenship app!"
         android:gravity="center"
         android:padding="8dp"
         android:textSize="32sp"

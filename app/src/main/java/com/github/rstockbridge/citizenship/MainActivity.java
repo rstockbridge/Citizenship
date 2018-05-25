@@ -1,4 +1,4 @@
-package com.github.rstockbridge.flashcards;
+package com.github.rstockbridge.citizenship;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;

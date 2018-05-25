@@ -1,4 +1,4 @@
-package com.github.rstockbridge.flashcards;
+package com.github.rstockbridge.citizenship;
 
 import java.util.ArrayList;
 import java.util.List;
