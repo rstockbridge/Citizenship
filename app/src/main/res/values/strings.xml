@@ -2,4 +2,7 @@
     <string name="app_name">Flashcards</string>
     <string name="show_answer">SHOW ANSWER</string>
     <string name="next_question">NEXT QUESTION</string>
+    <string name="complete">Practice complete!</string>
+    <string name="advance">ADVANCE</string>
+    <string name="home">HOME</string>
 </resources>
