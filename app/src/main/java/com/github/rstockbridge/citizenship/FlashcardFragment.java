@@ -1,4 +1,4 @@
-package com.github.rstockbridge.flashcards;
+package com.github.rstockbridge.citizenship;
 
 import android.graphics.Color;
 import android.os.Bundle;

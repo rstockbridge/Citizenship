@@ -1,4 +1,4 @@
-package com.github.rstockbridge.flashcards;
+package com.github.rstockbridge.citizenship;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
