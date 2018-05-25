@@ -1,11 +1,13 @@
 package com.github.rstockbridge.flashcards;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -72,6 +74,32 @@ public class FlashcardPagerActivity extends AppCompatActivity {
                 // this method intentionally left blank
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (viewPager.getCurrentItem() < practiceLength) {
+            showAlertDialogButton();
+        } else {
+            finish();
+        }
+    }
+
+    public void showAlertDialogButton() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.confirm_exit);
+        builder.setMessage(R.string.exit_message);
+
+        builder.setPositiveButton(R.string.exit, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, final int id) {
+                finish();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, null);
+
+        final AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     public void jumpToPage(final View view) {
