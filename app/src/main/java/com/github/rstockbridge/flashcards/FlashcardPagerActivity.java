@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -46,6 +47,29 @@ public class FlashcardPagerActivity extends AppCompatActivity {
             @Override
             public int getCount() {
                 return practiceLength + 1;
+            }
+        });
+
+        setTitle("Page " + (viewPager.getCurrentItem() + 1) + " of " + practiceLength);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // this method intentionally left blank
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position < practiceLength) {
+                    setTitle(getResources().getString(R.string.page_title, position + 1, practiceLength));
+                } else {
+                    setTitle(getResources().getString(R.string.complete_title));
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                // this method intentionally left blank
             }
         });
     }

@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Flashcards</string>
+    <string name="page_title">Page %1$d of %2$d</string>
+    <string name="complete_title">Practice Complete</string>
     <string name="show_answer">SHOW ANSWER</string>
     <string name="next_question">NEXT QUESTION</string>
     <string name="complete">Practice complete!</string>
