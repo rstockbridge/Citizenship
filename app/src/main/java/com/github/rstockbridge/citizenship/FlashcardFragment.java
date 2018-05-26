@@ -17,6 +17,11 @@ public class FlashcardFragment extends Fragment {
     private static final String ARG_QUESTION_TEXT = "question_text";
     private static final String ARG_ANSWER_TEXT = "answer_text";
 
+    private static final String SAVED_ANSWER_BUTTON_VISIBLE = "answer_button_visible";
+    private static final String SAVED_NEXT_BUTTON_VISIBLE = "next_button_visible";
+    private static final String SAVED_ADVANCE_BUTTON_VISIBLE = "advance_button_visible";
+
+
     private TextView question;
     private TextView answer;
     private Button answerButton;
@@ -53,22 +58,61 @@ public class FlashcardFragment extends Fragment {
         nextButton = v.findViewById(R.id.next_button);
         advanceButton = v.findViewById(R.id.advance_button);
 
+        if (savedInstanceState != null) {
+            if (savedInstanceState.getBoolean(SAVED_ANSWER_BUTTON_VISIBLE)) {
+                makeAnswerButtonVisible();
+            }
+
+            if (savedInstanceState.getBoolean(SAVED_NEXT_BUTTON_VISIBLE)) {
+                makeNextButtonVisible();
+            }
+
+            if (savedInstanceState.getBoolean(SAVED_ADVANCE_BUTTON_VISIBLE)) {
+                makeAdvanceButtonVisible();
+            }
+        }
+
         answerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                answer.setTextColor(Color.WHITE);
-                answerButton.setVisibility(View.GONE);
-
                 if (getArguments().getBoolean(ARG_ON_LAST_FLASHCARD)) {
-                    advanceButton.setVisibility(View.VISIBLE);
-                    nextButton.setVisibility(View.GONE);
+                    makeAdvanceButtonVisible();
                 } else {
-                    advanceButton.setVisibility(View.GONE);
-                    nextButton.setVisibility(View.VISIBLE);
+                    makeNextButtonVisible();
                 }
             }
         });
 
         return v;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(SAVED_ANSWER_BUTTON_VISIBLE, answerButton.getVisibility() == View.VISIBLE);
+        outState.putBoolean(SAVED_NEXT_BUTTON_VISIBLE, nextButton.getVisibility() == View.VISIBLE);
+        outState.putBoolean(SAVED_ADVANCE_BUTTON_VISIBLE, advanceButton.getVisibility() == View.VISIBLE);
+    }
+
+    private void makeAnswerButtonVisible() {
+        answerButton.setVisibility(View.VISIBLE);
+        nextButton.setVisibility(View.GONE);
+        advanceButton.setVisibility(View.GONE);
+    }
+
+    private void makeNextButtonVisible() {
+        answerButton.setVisibility(View.GONE);
+        nextButton.setVisibility(View.VISIBLE);
+        advanceButton.setVisibility(View.GONE);
+
+        answer.setTextColor(Color.WHITE);
+    }
+
+    private void makeAdvanceButtonVisible() {
+        answerButton.setVisibility(View.GONE);
+        nextButton.setVisibility(View.GONE);
+        advanceButton.setVisibility(View.VISIBLE);
+
+        answer.setTextColor(Color.WHITE);
     }
 }

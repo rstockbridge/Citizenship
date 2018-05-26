@@ -20,6 +20,7 @@ import java.util.List;
 public class FlashcardPagerActivity extends AppCompatActivity {
 
     private static final String EXTRA_PRACTICE_LENGTH = "com.github.rstockbridge.flashcards.practice_length";
+    private static final String SAVED_DIALOG_SHOWING = "dialog_visible";
 
     private QuestionBank questionBank;
 
@@ -28,6 +29,8 @@ public class FlashcardPagerActivity extends AppCompatActivity {
     private List<Integer> randomizedOrder;
 
     private NonSwipeableViewPager viewPager;
+
+    private AlertDialog dialog;
 
     public static Intent newIntent(final Context context, final int practiceLength) {
         final Intent intent = new Intent(context, FlashcardPagerActivity.class);
@@ -87,6 +90,12 @@ public class FlashcardPagerActivity extends AppCompatActivity {
                 // this method intentionally left blank
             }
         });
+
+        if (savedInstanceState != null) {
+            if (savedInstanceState.getBoolean(SAVED_DIALOG_SHOWING)) {
+                showAlertDialogButton();
+            }
+        }
     }
 
     @Override
@@ -108,6 +117,15 @@ public class FlashcardPagerActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (dialog != null) {
+            outState.putBoolean(SAVED_DIALOG_SHOWING, dialog.isShowing());
+        }
+    }
+
     public void showAlertDialogButton() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.confirm_exit);
@@ -121,7 +139,7 @@ public class FlashcardPagerActivity extends AppCompatActivity {
         });
         builder.setNegativeButton(R.string.cancel, null);
 
-        final AlertDialog dialog = builder.create();
+        dialog = builder.create();
         dialog.show();
     }
 
