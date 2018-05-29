@@ -4,57 +4,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/question"
+        android:id="@+id/question_label"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
         android:textColor="@android:color/black"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:layout_margin="16dp" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@android:color/black"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:padding="16dp" >
 
         <TextView
-            android:id="@+id/answer"
+            android:id="@+id/answer_label"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center_vertical"
             android:background="@android:color/black"
-            android:textColor="@android:color/transparent"
+            android:textColor="@android:color/white"
             android:textSize="20sp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical"
             tools:text="This is a test" />
 
     </ScrollView>
 
     <Button
-        android:id="@+id/answer_button"
+        android:id="@+id/action_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/show_answer" />
-
-    <Button
-        android:id="@+id/next_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="jumpToPage"
-        android:text="@string/next_question"
-        android:visibility="gone" />
-
-    <Button
-        android:id="@+id/advance_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="jumpToPage"
-        android:text="@string/advance"
-        android:visibility="gone" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

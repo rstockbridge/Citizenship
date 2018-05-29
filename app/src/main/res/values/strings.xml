@@ -1,14 +1,20 @@
 <resources>
     <string name="app_name">Citizenship</string>
     <string name="page_title">Page %1$d of %2$d</string>
+    <string name="welcome_message">Welcome to the Citizenship app!</string>
+    <string name="select_practice_length">Select practice length:</string>
+    <string name="short_length">Short (10)</string>
+    <string name="med_length">Medium (25)</string>
+    <string name="full_length">Full (100)</string>
     <string name="complete_title">Practice Complete</string>
-    <string name="show_answer">SHOW ANSWER</string>
-    <string name="next_question">NEXT QUESTION</string>
+    <string name="show_answer">Show Answer</string>
+    <string name="next_question">Next Question</string>
     <string name="complete">Practice complete!</string>
-    <string name="advance">ADVANCE</string>
-    <string name="home">HOME</string>
+    <string name="advance">Advance</string>
+    <string name="home">Home</string>
     <string name="confirm_exit">Confirm Exit</string>
     <string name="exit_message">Exiting will end your current practice session.</string>
     <string name="exit">Exit</string>
     <string name="cancel">Cancel</string>
+
 </resources>
