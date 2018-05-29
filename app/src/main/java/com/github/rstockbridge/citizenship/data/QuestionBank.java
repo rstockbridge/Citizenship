@@ -1,4 +1,6 @@
-package com.github.rstockbridge.citizenship;
+package com.github.rstockbridge.citizenship.data;
+
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +11,7 @@ public class QuestionBank {
 
     private List<Question> questions;
 
-    public static QuestionBank get() {
+    public static QuestionBank getNewInstance() {
         if (questionBank == null) {
             questionBank = new QuestionBank();
         }
@@ -99,7 +101,7 @@ public class QuestionBank {
         questions.add(new Question("Name one war fought by the United States in the 1900s.", "- World War I\n" + "- World War II\n" + "- Korean War\n" + "- Vietnam War\n" + "- (Persian) Gulf War"));
         questions.add(new Question("Who was President during World War I?", "(Woodrow) Wilson"));
         questions.add(new Question("Who was President during the Great Depression and World War II?", "(Franklin) Roosevelt"));
-        questions.add(new Question("Who did the United States fight in World War II?", "Ja∂pan, Germany, and Italy"));
+        questions.add(new Question("Who did the United States fight in World War II?", "Japan, Germany, and Italy"));
         questions.add(new Question("Before he was President, Eisenhower was a general. What war was he in?", "World War II"));
         questions.add(new Question("During the Cold War, what was the main concern of the United States?", "Communism"));
         questions.add(new Question("What movement tried to end racial discrimination?", "civil rights (movement)"));
@@ -121,23 +123,8 @@ public class QuestionBank {
         questions.add(new Question("Name two national U.S. holidays.", "- New Year’s Day\n" + "- Martin Luther King, Jr. Day\n" + "- Presidents’ Day\n" + "- Memorial Day\n" + "- Independence Day\n" + "- Labor Day\n" + "- Columbus Day\n" + "- Veterans Day\n" + "- Thanksgiving\n" + "- Christmas"));
     }
 
-    public int getSize() {
-        return questions.size();
-    }
-
-    public String getQuestionText(final int index) {
-        if (index <= questions.size()) {
-            return questions.get(index).getQuestionText();
-        }
-
-        return null;
-    }
-
-    public String getAnswerText(final int index) {
-        if (index <= questions.size()) {
-            return questions.get(index).getAnswerText();
-        }
-
-        return null;
+    @NonNull
+    public List<Question> getAllQuestions() {
+        return new ArrayList<>(questions);
     }
 }

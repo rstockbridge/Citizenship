@@ -11,8 +11,6 @@ import android.widget.Button;
 
 public class CompletedFragment extends Fragment {
 
-    private Button homeButton;
-
     @Nullable
     @Override
     public View onCreateView(
@@ -21,7 +19,7 @@ public class CompletedFragment extends Fragment {
             @Nullable final Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.fragment_completed, container,false);
 
-        homeButton = v.findViewById(R.id.home_button);
+        final Button homeButton = v.findViewById(R.id.home_button);
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

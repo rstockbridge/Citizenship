@@ -9,7 +9,7 @@
         android:id="@+id/text_view_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Welcome to the Citizenship app!"
+        android:text="@string/welcome_message"
         android:gravity="center"
         android:padding="8dp"
         android:textSize="32sp"
@@ -19,7 +19,7 @@
         android:id="@+id/text_view_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Select practice length:"
+        android:text="@string/select_practice_length"
         android:gravity="center"
         android:padding="8dp"
         android:textSize="32sp"
@@ -30,21 +30,21 @@
         android:id="@+id/short_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="SHORT (10)"
-        android:layout_below="@id/text_view_2"/>
+        android:text="@string/short_length"
+        android:layout_below="@id/text_view_2" />
 
     <Button
         android:id="@+id/med_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="MEDIUM (25)"
-        android:layout_below="@id/short_button"/>
+        android:text="@string/med_length"
+        android:layout_below="@id/short_button" />
 
     <Button
         android:id="@+id/long_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="FULL (100)"
-        android:layout_below="@id/med_button"/>
+        android:text="@string/full_length"
+        android:layout_below="@id/med_button" />
 
 </RelativeLayout>

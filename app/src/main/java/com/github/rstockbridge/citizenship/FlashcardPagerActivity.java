@@ -3,38 +3,33 @@ package com.github.rstockbridge.citizenship;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
+
+import com.github.rstockbridge.citizenship.data.Question;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class FlashcardPagerActivity extends AppCompatActivity {
+public class FlashcardPagerActivity
+        extends AppCompatActivity
+        implements FlashcardFragment.OnNextQuestionClickListener {
 
-    private static final String EXTRA_PRACTICE_LENGTH = "com.github.rstockbridge.flashcards.practice_length";
+    private static final String EXTRA_QUESTIONS = "questions";
     private static final String SAVED_DIALOG_SHOWING = "dialog_visible";
 
-    private QuestionBank questionBank;
-
-    private int practiceLength;
-
-    private List<Integer> randomizedOrder;
-
     private NonSwipeableViewPager viewPager;
+    private PagerAdapter adapter;
 
     private AlertDialog dialog;
 
-    public static Intent newIntent(final Context context, final int practiceLength) {
+    public static Intent newIntent(final Context context, final ArrayList<Question> questions) {
         final Intent intent = new Intent(context, FlashcardPagerActivity.class);
-        intent.putExtra(EXTRA_PRACTICE_LENGTH, practiceLength);
+        intent.putParcelableArrayListExtra(EXTRA_QUESTIONS, questions);
         return intent;
     }
 
@@ -43,33 +38,13 @@ public class FlashcardPagerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flashcard);
 
-        questionBank = QuestionBank.get();
-        practiceLength = getIntent().getIntExtra(EXTRA_PRACTICE_LENGTH, 0);
+        enableUpButton();
 
-        randomizeOrder();
+        final List<Question> questions = getIntent().getParcelableArrayListExtra(EXTRA_QUESTIONS);
 
         viewPager = findViewById(R.id.flashcard_view_pager);
-
-        final FragmentManager fm = getSupportFragmentManager();
-        viewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
-            @Override
-            public Fragment getItem(int position) {
-                if (position < practiceLength) {
-                    final int index = getQuestionIndex(position);
-                    return FlashcardFragment.newInstance(position == practiceLength - 1, questionBank.getQuestionText(index), questionBank.getAnswerText(index));
-                } else {
-                    return new CompletedFragment();
-                }
-            }
-
-            @Override
-            public int getCount() {
-                return practiceLength + 1;
-            }
-        });
-
-        setTitle("Page " + (viewPager.getCurrentItem() + 1) + " of " + practiceLength);
-
+        adapter = new FlashcardAdapter(getSupportFragmentManager(), questions);
+        viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -78,11 +53,7 @@ public class FlashcardPagerActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if (position < practiceLength) {
-                    setTitle(getResources().getString(R.string.page_title, position + 1, practiceLength));
-                } else {
-                    setTitle(getResources().getString(R.string.complete_title));
-                }
+                updateScreenTitle();
             }
 
             @Override
@@ -91,9 +62,11 @@ public class FlashcardPagerActivity extends AppCompatActivity {
             }
         });
 
+        updateScreenTitle();
+
         if (savedInstanceState != null) {
             if (savedInstanceState.getBoolean(SAVED_DIALOG_SHOWING)) {
-                showAlertDialogButton();
+                showAlertDialog();
             }
         }
     }
@@ -110,8 +83,8 @@ public class FlashcardPagerActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (viewPager.getCurrentItem() < practiceLength) {
-            showAlertDialogButton();
+        if (viewPager.getCurrentItem() < adapter.getCount() - 1) {
+            showAlertDialog();
         } else {
             finish();
         }
@@ -126,7 +99,12 @@ public class FlashcardPagerActivity extends AppCompatActivity {
         }
     }
 
-    public void showAlertDialogButton() {
+    @Override
+    public void onNextQuestionClick() {
+        viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+    }
+
+    public void showAlertDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.confirm_exit);
         builder.setMessage(R.string.exit_message);
@@ -143,19 +121,15 @@ public class FlashcardPagerActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    public void jumpToPage(final View view) {
-        viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+    private void enableUpButton() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void randomizeOrder() {
-        randomizedOrder = new ArrayList<>();
-        for (int i = 0; i < questionBank.getSize(); i++) {
-            randomizedOrder.add(i);
+    private void updateScreenTitle() {
+        if (viewPager.getCurrentItem() < adapter.getCount() - 1) {
+            setTitle(getResources().getString(R.string.page_title, (viewPager.getCurrentItem() + 1), adapter.getCount() - 1));
+        } else {
+            setTitle(getResources().getString(R.string.complete_title));
         }
-        Collections.shuffle(randomizedOrder);
-    }
-
-    private int getQuestionIndex(final int position) {
-        return randomizedOrder.get(position);
     }
 }

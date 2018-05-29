@@ -1,6 +1,6 @@
 package com.github.rstockbridge.citizenship;
 
-import android.graphics.Color;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,32 +11,47 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class FlashcardFragment extends Fragment {
+import com.github.rstockbridge.citizenship.data.Question;
 
-    private static final String ARG_ON_LAST_FLASHCARD = "on_last_flashcard";
-    private static final String ARG_QUESTION_TEXT = "question_text";
-    private static final String ARG_ANSWER_TEXT = "answer_text";
+public class FlashcardFragment extends Fragment implements View.OnClickListener {
 
-    private static final String SAVED_ANSWER_BUTTON_VISIBLE = "answer_button_visible";
-    private static final String SAVED_NEXT_BUTTON_VISIBLE = "next_button_visible";
-    private static final String SAVED_ADVANCE_BUTTON_VISIBLE = "advance_button_visible";
+    public interface OnNextQuestionClickListener {
+        void onNextQuestionClick();
+    }
 
+    private static final String ARG_LAST_FLASHCARD = "last_flashcard";
+    private static final String ARG_QUESTION = "question";
 
-    private TextView question;
-    private TextView answer;
-    private Button answerButton;
-    private Button nextButton;
-    private Button advanceButton;
+    private static final String SAVED_ANSWER_REVEALED = "answer_revealed";
 
-    public static FlashcardFragment newInstance(final boolean onLastFlashcard, final String questionText, final String answerText) {
+    private OnNextQuestionClickListener listener;
+    private String answer;
+    private boolean answerRevealed;
+    private boolean lastFlashcard;
+    private TextView questionLabel;
+    private TextView answerLabel;
+    private Button actionButton;
+
+    public static FlashcardFragment newInstance(final Question question, final boolean lastFlashcard) {
         final Bundle args = new Bundle();
-        args.putBoolean(ARG_ON_LAST_FLASHCARD, onLastFlashcard);
-        args.putString(ARG_QUESTION_TEXT, questionText);
-        args.putString(ARG_ANSWER_TEXT, answerText);
+        args.putBoolean(ARG_LAST_FLASHCARD, lastFlashcard);
+        args.putParcelable(ARG_QUESTION, question);
 
         final FlashcardFragment fragment = new FlashcardFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(final Context context) {
+        super.onAttach(context);
+
+        try {
+            listener = (OnNextQuestionClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnNextQuestionClickListener");
+        }
     }
 
     @Nullable
@@ -48,71 +63,52 @@ public class FlashcardFragment extends Fragment {
 
         final View v = inflater.inflate(R.layout.fragment_flashcard, container, false);
 
-        question = v.findViewById(R.id.question);
-        question.setText(getArguments().getString(ARG_QUESTION_TEXT));
+        actionButton = v.findViewById(R.id.action_button);
+        actionButton.setOnClickListener(this);
 
-        answer = v.findViewById(R.id.answer);
-        answer.setText(getArguments().getString(ARG_ANSWER_TEXT));
-
-        answerButton = v.findViewById(R.id.answer_button);
-        nextButton = v.findViewById(R.id.next_button);
-        advanceButton = v.findViewById(R.id.advance_button);
-
-        if (savedInstanceState != null) {
-            if (savedInstanceState.getBoolean(SAVED_ANSWER_BUTTON_VISIBLE)) {
-                makeAnswerButtonVisible();
-            }
-
-            if (savedInstanceState.getBoolean(SAVED_NEXT_BUTTON_VISIBLE)) {
-                makeNextButtonVisible();
-            }
-
-            if (savedInstanceState.getBoolean(SAVED_ADVANCE_BUTTON_VISIBLE)) {
-                makeAdvanceButtonVisible();
-            }
-        }
-
-        answerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (getArguments().getBoolean(ARG_ON_LAST_FLASHCARD)) {
-                    makeAdvanceButtonVisible();
-                } else {
-                    makeNextButtonVisible();
-                }
-            }
-        });
+        questionLabel = v.findViewById(R.id.question_label);
+        answerLabel = v.findViewById(R.id.answer_label);
 
         return v;
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        lastFlashcard = getArguments().getBoolean(ARG_LAST_FLASHCARD);
+
+        final Question question = getArguments().getParcelable(ARG_QUESTION);
+        answer = question.getAnswerText();
+
+        questionLabel.setText(question.getQuestionText());
+
+        if (savedInstanceState != null && savedInstanceState.getBoolean(SAVED_ANSWER_REVEALED)) {
+            revealAnswer();
+        } else {
+            actionButton.setText(getResources().getString(R.string.show_answer));
+        }
+
+    }
+
+    @Override
     public void onSaveInstanceState(@NonNull final Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(SAVED_ANSWER_BUTTON_VISIBLE, answerButton.getVisibility() == View.VISIBLE);
-        outState.putBoolean(SAVED_NEXT_BUTTON_VISIBLE, nextButton.getVisibility() == View.VISIBLE);
-        outState.putBoolean(SAVED_ADVANCE_BUTTON_VISIBLE, advanceButton.getVisibility() == View.VISIBLE);
+        outState.putBoolean(SAVED_ANSWER_REVEALED, answerRevealed);
     }
 
-    private void makeAnswerButtonVisible() {
-        answerButton.setVisibility(View.VISIBLE);
-        nextButton.setVisibility(View.GONE);
-        advanceButton.setVisibility(View.GONE);
+    private void revealAnswer() {
+        answerRevealed = true;
+        answerLabel.setText(answer);
+        actionButton.setText(lastFlashcard ? getResources().getString(R.string.advance) : getResources().getString(R.string.next_question));
     }
 
-    private void makeNextButtonVisible() {
-        answerButton.setVisibility(View.GONE);
-        nextButton.setVisibility(View.VISIBLE);
-        advanceButton.setVisibility(View.GONE);
-
-        answer.setTextColor(Color.WHITE);
-    }
-
-    private void makeAdvanceButtonVisible() {
-        answerButton.setVisibility(View.GONE);
-        nextButton.setVisibility(View.GONE);
-        advanceButton.setVisibility(View.VISIBLE);
-
-        answer.setTextColor(Color.WHITE);
+    @Override
+    public void onClick(final View v) {
+        if (answerRevealed) {
+            listener.onNextQuestionClick();
+        } else {
+            revealAnswer();
+        }
     }
 }
