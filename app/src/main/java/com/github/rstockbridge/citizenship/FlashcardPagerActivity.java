@@ -3,7 +3,6 @@ package com.github.rstockbridge.citizenship;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -13,24 +12,30 @@ import android.view.MenuItem;
 import com.github.rstockbridge.citizenship.data.Question;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class FlashcardPagerActivity
         extends AppCompatActivity
-        implements FlashcardFragment.OnNextQuestionClickListener {
+        implements FlashcardFragment.OnNextQuestionClickListener, FlashcardFragment.OnRemoveFavoriteListener {
 
     private static final String EXTRA_QUESTIONS = "questions";
-    private static final String SAVED_DIALOG_SHOWING = "dialog_visible";
+    private static final String EXTRA_FAVORITES_PRACTICE = "enable_favorites";
+    private static final String SAVED_DIALOG_VISIBLE = "dialog_visible";
+
+    private Boolean favoritesPractice;
+    private List<Question> questions;
 
     private NonSwipeableViewPager viewPager;
-    private PagerAdapter adapter;
+    private FlashcardAdapter adapter;
 
     private AlertDialog dialog;
 
-    public static Intent newIntent(final Context context, final ArrayList<Question> questions) {
+    public static void start(final Context context, final ArrayList<Question> questions, final boolean favoritesPractice) {
         final Intent intent = new Intent(context, FlashcardPagerActivity.class);
         intent.putParcelableArrayListExtra(EXTRA_QUESTIONS, questions);
-        return intent;
+        intent.putExtra(EXTRA_FAVORITES_PRACTICE, favoritesPractice);
+        context.startActivity(intent);
     }
 
     @Override
@@ -40,10 +45,11 @@ public class FlashcardPagerActivity
 
         enableUpButton();
 
-        final List<Question> questions = getIntent().getParcelableArrayListExtra(EXTRA_QUESTIONS);
+        questions = getIntent().getParcelableArrayListExtra(EXTRA_QUESTIONS);
+        favoritesPractice = getIntent().getBooleanExtra(EXTRA_FAVORITES_PRACTICE, false);
 
         viewPager = findViewById(R.id.flashcard_view_pager);
-        adapter = new FlashcardAdapter(getSupportFragmentManager(), questions);
+        adapter = new FlashcardAdapter(getSupportFragmentManager(), questions, favoritesPractice);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -65,7 +71,7 @@ public class FlashcardPagerActivity
         updateScreenTitle();
 
         if (savedInstanceState != null) {
-            if (savedInstanceState.getBoolean(SAVED_DIALOG_SHOWING)) {
+            if (savedInstanceState.getBoolean(SAVED_DIALOG_VISIBLE)) {
                 showAlertDialog();
             }
         }
@@ -95,13 +101,36 @@ public class FlashcardPagerActivity
         super.onSaveInstanceState(outState);
 
         if (dialog != null) {
-            outState.putBoolean(SAVED_DIALOG_SHOWING, dialog.isShowing());
+            outState.putBoolean(SAVED_DIALOG_VISIBLE, dialog.isShowing());
         }
     }
 
     @Override
     public void onNextQuestionClick() {
         viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+    }
+
+    @Override
+    public void onRemoveFavorite(final int questionId) {
+        if (favoritesPractice) {
+            final int currentPage = viewPager.getCurrentItem();
+            viewPager.setAdapter(null);
+
+            final Iterator<Question> iterator = questions.iterator();
+
+            while (iterator.hasNext()) {
+                final Question question = iterator.next();
+                if (question.getId() == questionId) {
+                    iterator.remove();
+                    break;
+                }
+            }
+
+            adapter = new FlashcardAdapter(getSupportFragmentManager(), questions, favoritesPractice);
+            viewPager.setAdapter(adapter);
+            viewPager.setCurrentItem(currentPage);
+            updateScreenTitle();
+        }
     }
 
     public void showAlertDialog() {
@@ -126,10 +155,10 @@ public class FlashcardPagerActivity
     }
 
     private void updateScreenTitle() {
-        if (viewPager.getCurrentItem() < adapter.getCount() - 1) {
-            setTitle(getResources().getString(R.string.page_title, (viewPager.getCurrentItem() + 1), adapter.getCount() - 1));
-        } else {
-            setTitle(getResources().getString(R.string.complete_title));
-        }
+        setTitle(onFlashcard() ? getResources().getString(R.string.page_title, (viewPager.getCurrentItem() + 1), adapter.getCount() - 1) : getResources().getString(R.string.complete_title));
+    }
+
+    private boolean onFlashcard() {
+        return viewPager.getCurrentItem() < adapter.getCount() - 1;
     }
 }

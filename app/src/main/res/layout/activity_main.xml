@@ -47,4 +47,18 @@
         android:text="@string/full_length"
         android:layout_below="@id/med_button" />
 
+    <Button
+        android:id="@+id/favorites_practice_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/favorites"
+        android:layout_below="@id/long_button" />
+
+    <Button
+        android:id="@+id/manage_favorites_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/manage_favorites"
+        android:layout_below="@id/favorites_practice_button" />
+
 </RelativeLayout>
