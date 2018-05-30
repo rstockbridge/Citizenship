@@ -13,20 +13,23 @@ import java.util.List;
 public class FlashcardAdapter extends FragmentStatePagerAdapter {
 
     private List<Question> questions;
+    private boolean favoritesPractice;
 
-    public FlashcardAdapter(
+    FlashcardAdapter(
             @NonNull final FragmentManager fragmentManager,
-            final List<Question> inputQuestions) {
+            final List<Question> inputQuestions,
+            final boolean inputFavoritesPractice) {
         super(fragmentManager);
 
         questions = inputQuestions;
+        favoritesPractice = inputFavoritesPractice;
     }
 
     @Override
     public Fragment getItem(int position) {
         if (position < getCount() - 1) {
             final boolean lastFlashcard = position == getCount() - 2;
-            return FlashcardFragment.newInstance(questions.get(position), lastFlashcard);
+            return FlashcardFragment.newInstance(questions.get(position), lastFlashcard, favoritesPractice);
         } else {
             return new CompletedFragment();
         }
@@ -35,5 +38,10 @@ public class FlashcardAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return questions.size() + 1;
+    }
+
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        return POSITION_NONE;
     }
 }

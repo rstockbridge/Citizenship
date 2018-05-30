@@ -16,5 +16,10 @@
     <string name="exit_message">Exiting will end your current practice session.</string>
     <string name="exit">Exit</string>
     <string name="cancel">Cancel</string>
+    <string name="favorites">Favorites (%1$d)</string>
+    <string name="confirm_removal">Confirm Removal</string>
+    <string name="removal_message">This question will be removed from your favorites.</string>
+    <string name="remove">Remove</string>
+    <string name="manage_favorites">Manage Favorites</string>
 
 </resources>

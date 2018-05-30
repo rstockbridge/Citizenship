@@ -7,14 +7,17 @@ import android.support.annotation.NonNull;
 public class Question implements Parcelable {
 
     @NonNull
-    private String question;
+    private final String question;
 
     @NonNull
-    private String answer;
+    private final  String answer;
 
-    Question(@NonNull final String inputQuestion, @NonNull final String inputAnswer) {
+    private final int id;
+
+    Question(@NonNull final String inputQuestion, @NonNull final String inputAnswer, final int inputId) {
         question = inputQuestion;
         answer = inputAnswer;
+        id = inputId;
     }
 
     public String getQuestionText() {
@@ -23,6 +26,10 @@ public class Question implements Parcelable {
 
     public String getAnswerText() {
         return answer;
+    }
+
+    public int getId() {
+        return id;
     }
 
     @Override
@@ -34,12 +41,14 @@ public class Question implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(question);
         dest.writeString(answer);
+        dest.writeInt(id);
     }
 
     @SuppressWarnings("WeakerAccess")
     protected Question(Parcel in) {
         question = in.readString();
         answer = in.readString();
+        id = in.readInt();
     }
 
     public static final Creator<Question> CREATOR = new Creator<Question>() {
