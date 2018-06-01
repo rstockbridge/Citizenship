@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.github.rstockbridge.citizenship.data.FavoritesManager;
+import com.github.rstockbridge.citizenship.data.FavoritesStorage;
 import com.github.rstockbridge.citizenship.data.Question;
 import com.github.rstockbridge.citizenship.data.QuestionBank;
 
@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         longButton.setOnClickListener(this);
         favoritesPracticeButton.setOnClickListener(this);
         manageFavoritesButton.setOnClickListener(this);
+
+        FavoritesStorage.init(this);
 
         syncFavoritesButton();
     }
@@ -75,9 +77,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void syncFavoritesButton() {
-        final List<Integer> favorites = FavoritesManager.getSharedInstance().getFavorites();
-        favoritesPracticeButton.setEnabled(favorites.size() > 0);
-        favoritesPracticeButton.setText(getResources().getString(R.string.favorites, favorites.size()));
+        final int size = FavoritesStorage.getSharedInstance().getSize();
+        favoritesPracticeButton.setEnabled(size > 0);
+        favoritesPracticeButton.setText(getResources().getString(R.string.favorites, size));
     }
 
     private void startFlashcards(final int numberOfFlashcards) {
@@ -88,8 +90,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void startFavoritesPractice() {
-        final List<Integer> favorites = FavoritesManager.getSharedInstance().getFavorites();
-        FlashcardPagerActivity.start(this, QuestionBank.getSharedInstance().getQuestionsFromId(favorites), true);
+        final ArrayList<Question> favorites = new ArrayList<>(FavoritesStorage.getSharedInstance().getFavorites());
+        FlashcardPagerActivity.start(this, favorites, true);
     }
 
     private void startManageFavorites() {
