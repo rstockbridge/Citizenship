@@ -4,12 +4,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.github.rstockbridge.citizenship.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class FavoritesStorage {
 
     private static final String PREF_FAVORITES = "favorites";
+    private static String comma;
+    private static String empty;
 
     private static FavoritesStorage favoritesStorage;
 
@@ -19,6 +23,9 @@ public class FavoritesStorage {
         if (favoritesStorage == null) {
             favoritesStorage = new FavoritesStorage(context);
         }
+
+        comma = context.getResources().getString(R.string.comma);
+        empty = context.getResources().getString(R.string.empty);
     }
 
     private FavoritesStorage(final Context context) {
@@ -30,7 +37,7 @@ public class FavoritesStorage {
     }
 
     private String getIds() {
-        return sharedPreferences.getString(PREF_FAVORITES, "");
+        return sharedPreferences.getString(PREF_FAVORITES, empty);
     }
 
     private void update(final String string) {
@@ -38,28 +45,32 @@ public class FavoritesStorage {
     }
 
     public void addToFavorites(final int id) {
-        final String newIds = getIds() + id + ",";
+        final String newIds = getIds() + id + comma;
         update(newIds);
     }
 
     public void removeFromFavorites(final int id) {
-        final String newIds = getIds().replaceAll(id + ",", "");
+        final String newIds = getIds().replaceAll(id + comma, empty);
         update(newIds);
     }
 
     public boolean contains(final int id) {
-        return getIds().contains(id + ",");
+        return getIds().contains(id + comma);
     }
 
     public int getSize() {
-        return getIds().length() - getIds().replaceAll(",", "").length();
+        if (getIds().length() > 0) {
+            return getIds().split(comma).length;
+        } else {
+            return 0;
+        }
     }
 
     public List<Question> getFavorites() {
         final List<Integer> favoritesById = new ArrayList<>();
 
         if (getIds().length() > 0) {
-            final String[] splitIds = getIds().split(",");
+            final String[] splitIds = getIds().split(comma);
 
             for (final String id : splitIds) {
                 favoritesById.add(Integer.valueOf(id));
