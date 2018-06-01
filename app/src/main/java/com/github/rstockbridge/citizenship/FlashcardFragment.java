@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.github.rstockbridge.citizenship.data.FavoritesManager;
+import com.github.rstockbridge.citizenship.data.FavoritesStorage;
 import com.github.rstockbridge.citizenship.data.Question;
 
 public class FlashcardFragment extends Fragment implements View.OnClickListener {
@@ -162,9 +162,9 @@ public class FlashcardFragment extends Fragment implements View.OnClickListener 
                     showAlertDialog();
                 } else {
                     if (questionIsFavorite()) {
-                        FavoritesManager.getSharedInstance().removeFromFavorites(question.getId());
+                        FavoritesStorage.getSharedInstance().removeFromFavorites(question.getId());
                     } else {
-                        FavoritesManager.getSharedInstance().addToFavorites(question.getId());
+                        FavoritesStorage.getSharedInstance().addToFavorites(question.getId());
                     }
 
                     syncFavoriteButton();
@@ -181,12 +181,12 @@ public class FlashcardFragment extends Fragment implements View.OnClickListener 
     }
 
     private boolean questionIsFavorite() {
-        return FavoritesManager.getSharedInstance().contains(question.getId());
+        return FavoritesStorage.getSharedInstance().contains(question.getId());
     }
 
     private void removeFromFavoritesPractice() {
         removeFavoriteListener.onRemoveFavorite(question.getId());
-        FavoritesManager.getSharedInstance().removeFromFavorites(question.getId());
+        FavoritesStorage.getSharedInstance().removeFromFavorites(question.getId());
     }
 
     public void showAlertDialog() {

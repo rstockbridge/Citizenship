@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.github.rstockbridge.citizenship.data.FavoritesManager;
+import com.github.rstockbridge.citizenship.data.FavoritesStorage;
 import com.github.rstockbridge.citizenship.data.Question;
 
 class FavoriteHolder extends RecyclerView.ViewHolder {
@@ -21,17 +21,16 @@ class FavoriteHolder extends RecyclerView.ViewHolder {
         favoriteButton = itemView.findViewById(R.id.make_favorite_list);
     }
 
-    public void bind(final Question inputQuestion) {
-        final Question question = inputQuestion;
+    public void bind(final Question question) {
         questionLabel.setText(question.getQuestionText());
 
         favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (questionIsFavorite(question)) {
-                    FavoritesManager.getSharedInstance().removeFromFavorites(question.getId());
+                    FavoritesStorage.getSharedInstance().removeFromFavorites(question.getId());
                 } else {
-                    FavoritesManager.getSharedInstance().addToFavorites(question.getId());
+                    FavoritesStorage.getSharedInstance().addToFavorites(question.getId());
                 }
 
                 syncFavoriteButton(question);
@@ -46,6 +45,6 @@ class FavoriteHolder extends RecyclerView.ViewHolder {
     }
 
     private boolean questionIsFavorite(final Question question) {
-        return FavoritesManager.getSharedInstance().contains(question.getId());
+        return FavoritesStorage.getSharedInstance().contains(question.getId());
     }
 }
