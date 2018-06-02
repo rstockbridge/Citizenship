@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:orientation="horizontal"
     android:layout_marginTop="8dp"
-    android:layout_marginBottom="8dp" >
+    android:layout_marginBottom="8dp">
 
     <TextView
         android:id="@+id/question_label_list"
@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|center_vertical"
         android:src="@drawable/ic_favorite_border"
-        android:background="@color/colorAccent" />
+        android:tint="@color/colorAccent"
+        android:background="@null" />
 
 </LinearLayout>
