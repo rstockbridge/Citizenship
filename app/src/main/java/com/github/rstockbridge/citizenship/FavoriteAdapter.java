@@ -3,6 +3,7 @@ package com.github.rstockbridge.citizenship;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
         }
 
         void bind(final Question question) {
+            Log.i("help", "id: " + question.getId() + "    question is favorite: " + questionIsFavorite(question));
             questionLabel.setText(question.getQuestionText());
 
             favoriteButton.setOnClickListener(new View.OnClickListener() {
