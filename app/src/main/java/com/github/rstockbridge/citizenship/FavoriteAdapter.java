@@ -61,9 +61,9 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
                 @Override
                 public void onClick(View v) {
                     if (questionIsFavorite(question)) {
-                        FavoritesStorage.getSharedInstance().removeFromFavorites(question.getId());
+                        FavoritesStorage.getSharedInstance().removeFromFavorites(question);
                     } else {
-                        FavoritesStorage.getSharedInstance().addToFavorites(question.getId());
+                        FavoritesStorage.getSharedInstance().addToFavorites(question);
                     }
 
                     syncFavoriteButton(question);
@@ -74,11 +74,11 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
         }
 
         private void syncFavoriteButton(final Question question) {
-            favoriteButton.setImageResource(questionIsFavorite(question) ? R.drawable.ic_favorite_filled : R.drawable.ic_favorite_border);
+            favoriteButton.setSelected(questionIsFavorite(question));
         }
 
         private boolean questionIsFavorite(final Question question) {
-            return FavoritesStorage.getSharedInstance().contains(question.getId());
+            return FavoritesStorage.getSharedInstance().contains(question);
         }
     }
 }

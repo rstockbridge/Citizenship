@@ -162,9 +162,9 @@ public class FlashcardFragment extends Fragment implements View.OnClickListener 
                     showAlertDialog();
                 } else {
                     if (questionIsFavorite()) {
-                        FavoritesStorage.getSharedInstance().removeFromFavorites(question.getId());
+                        FavoritesStorage.getSharedInstance().removeFromFavorites(question);
                     } else {
-                        FavoritesStorage.getSharedInstance().addToFavorites(question.getId());
+                        FavoritesStorage.getSharedInstance().addToFavorites(question);
                     }
 
                     syncFavoriteButton();
@@ -177,16 +177,16 @@ public class FlashcardFragment extends Fragment implements View.OnClickListener 
     }
 
     public void syncFavoriteButton() {
-        favoriteButton.setImageResource(questionIsFavorite() ? R.drawable.ic_favorite_filled : R.drawable.ic_favorite_border);
+        favoriteButton.setSelected(questionIsFavorite());
     }
 
     private boolean questionIsFavorite() {
-        return FavoritesStorage.getSharedInstance().contains(question.getId());
+        return FavoritesStorage.getSharedInstance().contains(question);
     }
 
     private void removeFromFavoritesPractice() {
         removeFavoriteListener.onRemoveFavorite(question.getId());
-        FavoritesStorage.getSharedInstance().removeFromFavorites(question.getId());
+        FavoritesStorage.getSharedInstance().removeFromFavorites(question);
     }
 
     public void showAlertDialog() {

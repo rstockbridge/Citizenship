@@ -4,11 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.github.rstockbridge.citizenship.R;
-
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 public class FavoritesStorage {
@@ -47,21 +43,21 @@ public class FavoritesStorage {
         sharedPreferences.edit().putString(PREF_FAVORITES, string).apply();
     }
 
-    public void addToFavorites(final int id) {
+    public void addToFavorites(final Question question) {
         final List<Integer> favoritesById = new ArrayList<>(getFavoritesById());
-        favoritesById.add(id);
+        favoritesById.add(question.getId());
         update(favoritesById);
     }
 
-    public void removeFromFavorites(final int id) {
+    public void removeFromFavorites(final Question question) {
         final List<Integer> favoritesById = new ArrayList<>(getFavoritesById());
-        favoritesById.remove(favoritesById.indexOf(id));
+        favoritesById.remove(favoritesById.indexOf(question.getId()));
         update(favoritesById);
     }
 
-    public boolean contains(final int id) {
-        for (final Question question : getFavorites()) {
-            if (question.getId() == id) {
+    public boolean contains(final Question question) {
+        for (final Question testQuestion : getFavorites()) {
+            if (testQuestion.getId() == question.getId()) {
                 return true;
             }
         }

@@ -38,8 +38,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         favoritesPracticeButton.setOnClickListener(this);
         manageFavoritesButton.setOnClickListener(this);
 
-        FavoritesStorage.init(this);
-
         syncFavoritesButton();
     }
 
