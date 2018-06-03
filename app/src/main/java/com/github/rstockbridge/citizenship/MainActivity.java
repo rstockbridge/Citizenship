@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void startFavoritesPractice() {
         final ArrayList<Question> favorites = new ArrayList<>(FavoritesStorage.getSharedInstance().getFavorites());
+        Collections.shuffle(favorites);
         FlashcardPagerActivity.start(this, favorites, true);
     }
 
