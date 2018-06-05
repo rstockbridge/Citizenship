@@ -1,5 +1,6 @@
 package com.github.rstockbridge.citizenship;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -16,18 +17,19 @@ import com.github.rstockbridge.citizenship.data.Question;
 import java.util.List;
 
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.FavoriteHolder> {
-    private Fragment fragment;
+
+    private Context context;
     private List<Question> questions;
 
-    FavoriteAdapter(final Fragment inputFragment, final List<Question> inputQuestions) {
+    FavoriteAdapter(final Context inputContext, final List<Question> inputQuestions) {
+        context = inputContext;
         questions = inputQuestions;
-        fragment = inputFragment;
     }
 
     @NonNull
     @Override
     public FavoriteHolder onCreateViewHolder(@NonNull ViewGroup parent, final int viewType) {
-        final LayoutInflater inflater = LayoutInflater.from(fragment.getActivity());
+        final LayoutInflater inflater = LayoutInflater.from(context);
         return new FavoriteHolder(inflater, parent);
     }
 
@@ -54,7 +56,6 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
         }
 
         void bind(final Question question) {
-            Log.i("help", "id: " + question.getId() + "    question is favorite: " + questionIsFavorite(question));
             questionLabel.setText(question.getQuestionText());
 
             favoriteButton.setOnClickListener(new View.OnClickListener() {

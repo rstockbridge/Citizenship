@@ -20,12 +20,11 @@ public class ManageFavoritesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_manage_favorites);
 
         final FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.favorites_container);
+        final Fragment fragment = fm.findFragmentById(R.id.favorites_container);
 
         if (fragment == null) {
-            fragment = new ManageFavoritesFragment();
             fm.beginTransaction()
-                    .add(R.id.favorites_container, fragment)
+                    .add(R.id.favorites_container, new ManageFavoritesFragment())
                     .commit();
         }
 
