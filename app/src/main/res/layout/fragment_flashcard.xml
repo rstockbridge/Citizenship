@@ -34,7 +34,8 @@
         android:layout_weight="1"
         android:background="@android:color/black"
         android:fillViewport="true"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:clipToPadding="false" >
 
         <TextView
             android:id="@+id/answer_label"
