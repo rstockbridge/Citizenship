@@ -14,10 +14,10 @@ public class Question implements Parcelable {
 
     private final int id;
 
-    Question(@NonNull final String inputQuestion, @NonNull final String inputAnswer, final int inputId) {
-        question = inputQuestion;
-        answer = inputAnswer;
-        id = inputId;
+    Question(@NonNull final String question, @NonNull final String answer, final int id) {
+        this.question = question;
+        this.answer = answer;
+        this.id = id;
     }
 
     public String getQuestionText() {
