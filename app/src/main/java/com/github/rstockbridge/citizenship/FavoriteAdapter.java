@@ -21,9 +21,9 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
     private Context context;
     private List<Question> questions;
 
-    FavoriteAdapter(final Context inputContext, final List<Question> inputQuestions) {
-        context = inputContext;
-        questions = inputQuestions;
+    FavoriteAdapter(final Context context, final List<Question> questions) {
+        this.context = context;
+        this.questions = questions;
     }
 
     @NonNull

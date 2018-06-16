@@ -17,12 +17,12 @@ public class FlashcardAdapter extends FragmentStatePagerAdapter {
 
     FlashcardAdapter(
             @NonNull final FragmentManager fragmentManager,
-            final List<Question> inputQuestions,
-            final boolean inputFavoritesPractice) {
+            final List<Question> questions,
+            final boolean favoritesPractice) {
         super(fragmentManager);
 
-        questions = inputQuestions;
-        favoritesPractice = inputFavoritesPractice;
+        this.questions = questions;
+        this.favoritesPractice = favoritesPractice;
     }
 
     @Override
