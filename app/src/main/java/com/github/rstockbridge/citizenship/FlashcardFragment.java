@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.github.rstockbridge.citizenship.data.FavoritesStorage;
 import com.github.rstockbridge.citizenship.data.Question;
 
-public class FlashcardFragment extends Fragment implements View.OnClickListener {
+public final class FlashcardFragment extends Fragment implements View.OnClickListener {
 
     public interface OnNextQuestionClickListener {
         void onNextQuestionClick();
@@ -49,7 +49,11 @@ public class FlashcardFragment extends Fragment implements View.OnClickListener 
 
     private AlertDialog dialog;
 
-    public static FlashcardFragment newInstance(final Question question, final boolean lastFlashcard, final boolean favoritesPractice) {
+    public static FlashcardFragment newInstance(
+            @NonNull final Question question,
+            final boolean lastFlashcard,
+            final boolean favoritesPractice) {
+
         final Bundle args = new Bundle();
         args.putParcelable(ARG_QUESTION, question);
         args.putBoolean(ARG_LAST_FLASHCARD, lastFlashcard);
@@ -61,7 +65,7 @@ public class FlashcardFragment extends Fragment implements View.OnClickListener 
     }
 
     @Override
-    public void onAttach(final Context context) {
+    public void onAttach(@NonNull final Context context) {
         super.onAttach(context);
 
         try {
