@@ -15,7 +15,7 @@ import com.github.rstockbridge.citizenship.data.QuestionBank;
 
 import java.util.List;
 
-public class ManageFavoritesFragment extends Fragment {
+public final class ManageFavoritesFragment extends Fragment {
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {

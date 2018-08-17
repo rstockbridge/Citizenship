@@ -10,14 +10,16 @@ import com.github.rstockbridge.citizenship.data.Question;
 import java.util.List;
 
 
-public class FlashcardAdapter extends FragmentStatePagerAdapter {
+public final class FlashcardAdapter extends FragmentStatePagerAdapter {
 
+    @NonNull
     private List<Question> questions;
+
     private boolean favoritesPractice;
 
     FlashcardAdapter(
             @NonNull final FragmentManager fragmentManager,
-            final List<Question> questions,
+            @NonNull final List<Question> questions,
             final boolean favoritesPractice) {
         super(fragmentManager);
 

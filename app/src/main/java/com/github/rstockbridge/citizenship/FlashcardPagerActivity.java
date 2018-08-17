@@ -3,6 +3,7 @@ package com.github.rstockbridge.citizenship;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class FlashcardPagerActivity
+public final class FlashcardPagerActivity
         extends AppCompatActivity
         implements FlashcardFragment.OnNextQuestionClickListener, FlashcardFragment.OnRemoveFavoriteListener {
 
@@ -23,7 +24,7 @@ public class FlashcardPagerActivity
     private static final String EXTRA_FAVORITES_PRACTICE = "enable_favorites";
     private static final String SAVED_DIALOG_VISIBLE = "dialog_visible";
 
-    private Boolean favoritesPractice;
+    private boolean favoritesPractice;
     private List<Question> questions;
 
     private NonSwipeableViewPager viewPager;
@@ -31,7 +32,11 @@ public class FlashcardPagerActivity
 
     private AlertDialog dialog;
 
-    public static void start(final Context context, final ArrayList<Question> questions, final boolean favoritesPractice) {
+    public static void start(
+            @NonNull final Context context,
+            @NonNull final ArrayList<Question> questions,
+            final boolean favoritesPractice) {
+
         final Intent intent = new Intent(context, FlashcardPagerActivity.class);
         intent.putParcelableArrayListExtra(EXTRA_QUESTIONS, questions);
         intent.putExtra(EXTRA_FAVORITES_PRACTICE, favoritesPractice);
