@@ -16,12 +16,15 @@ import com.github.rstockbridge.citizenship.data.Question;
 
 import java.util.List;
 
-public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.FavoriteHolder> {
+public final class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.FavoriteHolder> {
 
+    @NonNull
     private Context context;
+
+    @NonNull
     private List<Question> questions;
 
-    FavoriteAdapter(final Context context, final List<Question> questions) {
+    FavoriteAdapter(@NonNull final Context context, @NonNull final List<Question> questions) {
         this.context = context;
         this.questions = questions;
     }

@@ -5,12 +5,14 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuestionBank {
+public final class QuestionBank {
 
     private static QuestionBank questionBank;
 
-    private List<Question> questions;
+    @NonNull
+    private List<Question> questions = new ArrayList<>();
 
+    @NonNull
     public static QuestionBank getSharedInstance() {
         if (questionBank == null) {
             questionBank = new QuestionBank();
@@ -19,8 +21,6 @@ public class QuestionBank {
     }
 
     private QuestionBank() {
-        questions = new ArrayList<>();
-
         questions.add(new Question("What is the supreme law of the land?", "the Constitution", 0));
         questions.add(new Question("What does the Constitution do?", "- sets up the government\n" + "- defines the government\n" + "- protects basic rights of Americans", 1));
         questions.add(new Question("The idea of self-government is in the first three words of the Constitution. What are these words?", "We the People", 2));

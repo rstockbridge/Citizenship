@@ -4,7 +4,7 @@ import android.app.Application;
 
 import com.github.rstockbridge.citizenship.data.FavoritesStorage;
 
-public class MyApplication extends Application {
+public final class MyApplication extends Application {
 
     @Override
     public void onCreate() {

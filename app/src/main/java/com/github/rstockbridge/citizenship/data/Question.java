@@ -4,13 +4,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-public class Question implements Parcelable {
+public final class Question implements Parcelable {
 
     @NonNull
     private final String question;
 
     @NonNull
-    private final  String answer;
+    private final String answer;
 
     private final int id;
 
@@ -38,14 +38,13 @@ public class Question implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeString(question);
         dest.writeString(answer);
         dest.writeInt(id);
     }
 
-    @SuppressWarnings("WeakerAccess")
-    protected Question(Parcel in) {
+    protected Question(final Parcel in) {
         question = in.readString();
         answer = in.readString();
         id = in.readInt();
@@ -53,7 +52,7 @@ public class Question implements Parcelable {
 
     public static final Creator<Question> CREATOR = new Creator<Question>() {
         @Override
-        public Question createFromParcel(Parcel in) {
+        public Question createFromParcel(final Parcel in) {
             return new Question(in);
         }
 
