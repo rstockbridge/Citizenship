@@ -17,7 +17,8 @@ public final class CompletedFragment extends Fragment {
             @NonNull final LayoutInflater inflater,
             @Nullable final ViewGroup container,
             @Nullable final Bundle savedInstanceState) {
-        final View v = inflater.inflate(R.layout.fragment_completed, container,false);
+
+        final View v = inflater.inflate(R.layout.fragment_completed, container, false);
 
         final Button homeButton = v.findViewById(R.id.home_button);
         homeButton.setOnClickListener(new View.OnClickListener() {

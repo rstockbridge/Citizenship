@@ -10,28 +10,29 @@ import com.github.rstockbridge.citizenship.data.Question;
 import java.util.List;
 
 
-public final class FlashcardAdapter extends FragmentStatePagerAdapter {
+public final class FlashcardViewPagerAdapter extends FragmentStatePagerAdapter {
 
     @NonNull
-    private List<Question> questions;
+    private final List<Question> questions;
 
-    private boolean favoritesPractice;
+    private final boolean isFavoritesPractice;
 
-    FlashcardAdapter(
+    FlashcardViewPagerAdapter(
             @NonNull final FragmentManager fragmentManager,
             @NonNull final List<Question> questions,
-            final boolean favoritesPractice) {
+            final boolean isFavoritesPractice) {
+
         super(fragmentManager);
 
         this.questions = questions;
-        this.favoritesPractice = favoritesPractice;
+        this.isFavoritesPractice = isFavoritesPractice;
     }
 
     @Override
-    public Fragment getItem(int position) {
+    public Fragment getItem(final int position) {
         if (position < getCount() - 1) {
-            final boolean lastFlashcard = position == getCount() - 2;
-            return FlashcardFragment.newInstance(questions.get(position), lastFlashcard, favoritesPractice);
+            final boolean isLastFlashcard = position == getCount() - 2;
+            return FlashcardFragment.newInstance(questions.get(position), isLastFlashcard, isFavoritesPractice);
         } else {
             return new CompletedFragment();
         }

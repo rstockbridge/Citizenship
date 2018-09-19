@@ -20,10 +20,12 @@ public final class Question implements Parcelable {
         this.id = id;
     }
 
+    @NonNull
     public String getQuestionText() {
         return question;
     }
 
+    @NonNull
     public String getAnswerText() {
         return answer;
     }

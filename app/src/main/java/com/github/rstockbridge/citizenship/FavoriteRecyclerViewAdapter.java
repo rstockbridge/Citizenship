@@ -2,9 +2,7 @@ package com.github.rstockbridge.citizenship;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,15 +14,17 @@ import com.github.rstockbridge.citizenship.data.Question;
 
 import java.util.List;
 
-public final class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.FavoriteHolder> {
+public final class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRecyclerViewAdapter.FavoriteHolder> {
 
     @NonNull
-    private Context context;
+    private final Context context;
 
     @NonNull
-    private List<Question> questions;
+    private final List<Question> questions;
 
-    FavoriteAdapter(@NonNull final Context context, @NonNull final List<Question> questions) {
+    FavoriteRecyclerViewAdapter(
+            @NonNull final Context context, @NonNull final List<Question> questions) {
+
         this.context = context;
         this.questions = questions;
     }
@@ -37,7 +37,7 @@ public final class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FavoriteHolder holder, int position) {
+    public void onBindViewHolder(@NonNull FavoriteHolder holder, final int position) {
         final Question question = questions.get(position);
         holder.bind(question);
     }
@@ -47,18 +47,20 @@ public final class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.
         return questions.size();
     }
 
-    class FavoriteHolder extends RecyclerView.ViewHolder {
-        private TextView questionLabel;
-        private ImageButton favoriteButton;
+    final class FavoriteHolder extends RecyclerView.ViewHolder {
 
-        FavoriteHolder(final LayoutInflater inflater, final ViewGroup parent) {
+        private final TextView questionLabel;
+        private final ImageButton favoriteButton;
+
+        FavoriteHolder(@NonNull final LayoutInflater inflater, @NonNull final ViewGroup parent) {
+
             super(inflater.inflate(R.layout.list_favorite, parent, false));
 
             questionLabel = itemView.findViewById(R.id.question_label_list);
             favoriteButton = itemView.findViewById(R.id.make_favorite_list);
         }
 
-        void bind(final Question question) {
+        void bind(@NonNull final Question question) {
             questionLabel.setText(question.getQuestionText());
 
             favoriteButton.setOnClickListener(new View.OnClickListener() {
@@ -77,11 +79,11 @@ public final class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.
             syncFavoriteButton(question);
         }
 
-        private void syncFavoriteButton(final Question question) {
+        private void syncFavoriteButton(@NonNull final Question question) {
             favoriteButton.setSelected(questionIsFavorite(question));
         }
 
-        private boolean questionIsFavorite(final Question question) {
+        private boolean questionIsFavorite(@NonNull final Question question) {
             return FavoritesStorage.getSharedInstance().contains(question);
         }
     }

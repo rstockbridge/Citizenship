@@ -1,6 +1,6 @@
 package com.github.rstockbridge.citizenship;
 
-import android.support.annotation.NonNull;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,26 +21,19 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
     private static final int MED_LENGTH = 25;
     private static final int LONG_LENGTH = 100;
 
+    private Button shortButton;
+    private Button medButton;
+    private Button longButton;
     private Button favoritesPracticeButton;
+    private Button manageFavoritesButton;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final Button shortButton = findViewById(R.id.short_button);
-        final Button medButton = findViewById(R.id.med_button);
-        final Button longButton = findViewById(R.id.long_button);
-        favoritesPracticeButton = findViewById(R.id.favorites_practice_button);
-        final Button manageFavoritesButton = findViewById(R.id.manage_favorites_button);
-
-        shortButton.setOnClickListener(this);
-        medButton.setOnClickListener(this);
-        longButton.setOnClickListener(this);
-        favoritesPracticeButton.setOnClickListener(this);
-        manageFavoritesButton.setOnClickListener(this);
-
-        syncFavoritesButton();
+        setupUI();
     }
 
     @Override
@@ -49,24 +42,27 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
             case R.id.short_button:
                 startFlashcards(SHORT_LENGTH);
                 break;
+
             case R.id.med_button:
                 startFlashcards(MED_LENGTH);
                 break;
-            case R.id.long_button: {
+
+            case R.id.long_button:
                 startFlashcards(LONG_LENGTH);
                 break;
-            }
-            case R.id.favorites_practice_button: {
+
+            case R.id.favorites_practice_button:
                 startFavoritesPractice();
                 break;
-            }
-            case R.id.manage_favorites_button: {
+
+            case R.id.manage_favorites_button:
                 startManageFavorites();
                 break;
-            }
+
             default:
-                // this branch intentionally left blank
+                throw new IllegalStateException("This line should never be reached.");
         }
+
     }
 
     @Override
@@ -74,6 +70,28 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
         super.onResume();
 
         syncFavoritesButton();
+    }
+
+    private void setupUI() {
+        initializeViews();
+        setListeners();
+        syncFavoritesButton();
+    }
+
+    private void initializeViews() {
+        shortButton = findViewById(R.id.short_button);
+        medButton = findViewById(R.id.med_button);
+        longButton = findViewById(R.id.long_button);
+        favoritesPracticeButton = findViewById(R.id.favorites_practice_button);
+        manageFavoritesButton = findViewById(R.id.manage_favorites_button);
+    }
+
+    private void setListeners() {
+        shortButton.setOnClickListener(this);
+        medButton.setOnClickListener(this);
+        longButton.setOnClickListener(this);
+        favoritesPracticeButton.setOnClickListener(this);
+        manageFavoritesButton.setOnClickListener(this);
     }
 
     private void syncFavoritesButton() {
@@ -85,7 +103,6 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
     private void startFlashcards(final int numberOfFlashcards) {
         final List<Question> allQuestions = QuestionBank.getSharedInstance().getAllQuestions();
         Collections.shuffle(allQuestions);
-
         FlashcardPagerActivity.start(this, new ArrayList<>(allQuestions.subList(0, numberOfFlashcards)), false);
     }
 
@@ -96,6 +113,7 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void startManageFavorites() {
-        ManageFavoritesActivity.start(this);
+        final Intent intent = new Intent(this, ManageFavoritesActivity.class);
+        startActivity(intent);
     }
 }

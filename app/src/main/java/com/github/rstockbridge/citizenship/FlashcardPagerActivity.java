@@ -3,11 +3,12 @@ package com.github.rstockbridge.citizenship;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.github.rstockbridge.citizenship.data.Question;
@@ -18,17 +19,20 @@ import java.util.List;
 
 public final class FlashcardPagerActivity
         extends AppCompatActivity
-        implements FlashcardFragment.OnNextQuestionClickListener, FlashcardFragment.OnRemoveFavoriteListener {
+        implements FlashcardFragment.OnNextQuestionClickListener,
+        FlashcardFragment.OnRemoveFavoriteListener {
 
     private static final String EXTRA_QUESTIONS = "questions";
     private static final String EXTRA_FAVORITES_PRACTICE = "enable_favorites";
     private static final String SAVED_DIALOG_VISIBLE = "dialog_visible";
 
-    private boolean favoritesPractice;
+    private boolean isFavoritesPractice;
+
+    @NonNull
     private List<Question> questions;
 
     private NonSwipeableViewPager viewPager;
-    private FlashcardAdapter adapter;
+    private FlashcardViewPagerAdapter adapter;
 
     private AlertDialog dialog;
 
@@ -44,36 +48,14 @@ public final class FlashcardPagerActivity
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flashcard);
 
-        enableUpButton();
-
         questions = getIntent().getParcelableArrayListExtra(EXTRA_QUESTIONS);
-        favoritesPractice = getIntent().getBooleanExtra(EXTRA_FAVORITES_PRACTICE, false);
+        isFavoritesPractice = getIntent().getBooleanExtra(EXTRA_FAVORITES_PRACTICE, false);
 
-        viewPager = findViewById(R.id.flashcard_view_pager);
-        adapter = new FlashcardAdapter(getSupportFragmentManager(), questions, favoritesPractice);
-        viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                // this method intentionally left blank
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                updateScreenTitle();
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                // this method intentionally left blank
-            }
-        });
-
-        updateScreenTitle();
+        setupUI();
 
         if (savedInstanceState != null) {
             if (savedInstanceState.getBoolean(SAVED_DIALOG_VISIBLE)) {
@@ -117,7 +99,7 @@ public final class FlashcardPagerActivity
 
     @Override
     public void onRemoveFavorite(final int questionId) {
-        if (favoritesPractice) {
+        if (isFavoritesPractice) {
             final int currentPage = viewPager.getCurrentItem();
             viewPager.setAdapter(null);
 
@@ -131,14 +113,46 @@ public final class FlashcardPagerActivity
                 }
             }
 
-            adapter = new FlashcardAdapter(getSupportFragmentManager(), questions, favoritesPractice);
+            adapter = new FlashcardViewPagerAdapter(getSupportFragmentManager(), questions, isFavoritesPractice);
             viewPager.setAdapter(adapter);
             viewPager.setCurrentItem(currentPage);
             updateScreenTitle();
         }
     }
 
-    public void showAlertDialog() {
+    private void setupUI() {
+        enableUpButton();
+
+        viewPager = findViewById(R.id.flashcard_view_pager);
+
+        adapter = new FlashcardViewPagerAdapter(getSupportFragmentManager(), questions, isFavoritesPractice);
+        viewPager.setAdapter(adapter);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // this method intentionally left blank
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                updateScreenTitle();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                // this method intentionally left blank
+            }
+        });
+
+        updateScreenTitle();
+    }
+
+    private void enableUpButton() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void showAlertDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.confirm_exit);
         builder.setMessage(R.string.exit_message);
@@ -153,10 +167,6 @@ public final class FlashcardPagerActivity
 
         dialog = builder.create();
         dialog.show();
-    }
-
-    private void enableUpButton() {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void updateScreenTitle() {

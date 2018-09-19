@@ -36,7 +36,7 @@ public final class FavoritesStorage {
         return sharedPreferences.getString(PREF_FAVORITES, "");
     }
 
-    private void update(final List<Integer> ids) {
+    private void update(@NonNull final List<Integer> ids) {
         final StringBuilder string = new StringBuilder();
 
         for (final int id : ids) {

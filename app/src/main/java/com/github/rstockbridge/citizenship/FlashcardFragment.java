@@ -17,7 +17,9 @@ import android.widget.TextView;
 import com.github.rstockbridge.citizenship.data.FavoritesStorage;
 import com.github.rstockbridge.citizenship.data.Question;
 
-public final class FlashcardFragment extends Fragment implements View.OnClickListener {
+public final class FlashcardFragment
+        extends Fragment
+        implements View.OnClickListener {
 
     public interface OnNextQuestionClickListener {
         void onNextQuestionClick();
@@ -37,15 +39,20 @@ public final class FlashcardFragment extends Fragment implements View.OnClickLis
     private OnNextQuestionClickListener nextQuestionListener;
     private OnRemoveFavoriteListener removeFavoriteListener;
 
+    @NonNull
     private Question question;
+
+    @NonNull
     private String answer;
+
     private boolean answerRevealed;
     private boolean lastFlashcard;
-    private TextView questionLabel;
+
     private TextView answerLabel;
     private Button actionButton;
-    private Boolean favoritesPractice;
     private FloatingActionButton favoriteButton;
+
+    private boolean favoritesPractice;
 
     private AlertDialog dialog;
 
@@ -92,32 +99,12 @@ public final class FlashcardFragment extends Fragment implements View.OnClickLis
 
         final View v = inflater.inflate(R.layout.fragment_flashcard, container, false);
 
-        actionButton = v.findViewById(R.id.action_button);
-        actionButton.setOnClickListener(this);
-
-        questionLabel = v.findViewById(R.id.question_label);
-        answerLabel = v.findViewById(R.id.answer_label);
-
-        favoriteButton = v.findViewById(R.id.fab_make_favorite);
-        favoriteButton.setOnClickListener(this);
-
-        return v;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
         favoritesPractice = getArguments().getBoolean(ARG_FAVORITES_PRACTICE);
-
         lastFlashcard = getArguments().getBoolean(ARG_LAST_FLASHCARD);
-
         question = getArguments().getParcelable(ARG_QUESTION);
         answer = question.getAnswerText();
 
-        questionLabel.setText(question.getQuestionText());
-
-        syncFavoriteButton();
+        setupUI(v);
 
         if (savedInstanceState != null) {
             if (savedInstanceState.getBoolean(SAVED_ANSWER_REVEALED)) {
@@ -131,6 +118,7 @@ public final class FlashcardFragment extends Fragment implements View.OnClickLis
             actionButton.setText(getResources().getString(R.string.show_answer));
         }
 
+        return v;
     }
 
     @Override
@@ -144,24 +132,18 @@ public final class FlashcardFragment extends Fragment implements View.OnClickLis
         }
     }
 
-    private void revealAnswer() {
-        answerRevealed = true;
-        answerLabel.setText(answer);
-        actionButton.setText(lastFlashcard ? getResources().getString(R.string.advance) : getResources().getString(R.string.next_question));
-    }
-
     @Override
     public void onClick(final View v) {
         switch (v.getId()) {
-            case (R.id.action_button): {
+            case R.id.action_button:
                 if (answerRevealed) {
                     nextQuestionListener.onNextQuestionClick();
                 } else {
                     revealAnswer();
                 }
                 break;
-            }
-            case (R.id.fab_make_favorite): {
+
+            case R.id.fab_make_favorite:
                 if (favoritesPractice) {
                     showAlertDialog();
                 } else {
@@ -174,13 +156,33 @@ public final class FlashcardFragment extends Fragment implements View.OnClickLis
                     syncFavoriteButton();
                 }
                 break;
-            }
+
             default:
-                // this branch intentionally left blank
+                throw new IllegalStateException("This line should never be reached.");
         }
     }
 
-    public void syncFavoriteButton() {
+    private void revealAnswer() {
+        answerRevealed = true;
+        answerLabel.setText(answer);
+        actionButton.setText(lastFlashcard ? getResources().getString(R.string.advance) : getResources().getString(R.string.next_question));
+    }
+
+    private void setupUI(@NonNull final View v) {
+        actionButton = v.findViewById(R.id.action_button);
+        actionButton.setOnClickListener(this);
+
+        final TextView questionLabel = v.findViewById(R.id.question_label);
+        questionLabel.setText(question.getQuestionText());
+
+        answerLabel = v.findViewById(R.id.answer_label);
+
+        favoriteButton = v.findViewById(R.id.fab_make_favorite);
+        favoriteButton.setOnClickListener(this);
+        syncFavoriteButton();
+    }
+
+    private void syncFavoriteButton() {
         favoriteButton.setSelected(questionIsFavorite());
     }
 
@@ -193,7 +195,7 @@ public final class FlashcardFragment extends Fragment implements View.OnClickLis
         FavoritesStorage.getSharedInstance().removeFromFavorites(question);
     }
 
-    public void showAlertDialog() {
+    private void showAlertDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.confirm_removal);
         builder.setMessage(R.string.removal_message);
